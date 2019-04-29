@@ -18,4 +18,6 @@ using Pkg; Pkg.add("https://github.com/janewliang/GeneticScreen.jl")
 using GeneticScreen
 ```
 
-<a name="myfootnote1">1</a>: Collins, S. R., Schuldiner, M., Krogan, N. J., & Weissman, J. S. (2006). A strategy for extracting and analyzing large-scale quantitative epistatic interaction data. Genome biology, 7(7), R63.
+---
+
+<a name="myfootnote1">1</a>. Collins, S. R., Schuldiner, M., Krogan, N. J., & Weissman, J. S. (2006). A strategy for extracting and analyzing large-scale quantitative epistatic interaction data. Genome biology, 7(7), R63.
