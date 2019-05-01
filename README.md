@@ -1,6 +1,6 @@
 # GeneticScreen
 
-Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](https://www.biorxiv.org/content/10.1101/468140v1), for more details. S-scores were implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
+Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](https://www.biorxiv.org/content/10.1101/468140v1), for more details. S-scores implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
 
 `GeneticScreen` is an extension of the [`matrixLM`](https://github.com/janewliang/matrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
@@ -126,7 +126,7 @@ The `mlm` function from `matrixLM` computes least-squares coefficient estimates 
 
 Coding the conditions in X and the mutants in Z as sum contrasts is convenient because interpretation of the main effects and interactions will be with respect to average colony sizes. However, to avoid over-parameterization, the last condition and last mutant will be left out of the contrasts fed into the model. `mlm_backest_sum` extends `mlm` by additionally back-estimating one or both of the "left-out" sum contrasts for the conditions and mutants. By default, both of the "left-out" sum contrasts will be estimated, but this behavior can be modified by setting `isXSum` and/or `isZSum` to `false`. `mlm_backest_sum` currently does not support back-estimation of contrasts when additional covariates are included in X and/or Z. 
 
-As with `mlm`, the `mlm_backest_sum` function estimates both row and column main effects (X and Z intercepts), but this behavior can be suppressed by setting `isXIntercept=false` and/or `isZntercept=false`. Column weights for `Y` and the target type for variance shrinkage can be optionally supplied to `weights` and `targetType`, respectively. 
+As with `mlm`, the `mlm_backest_sum` function estimates both row and column main effects (X and Z intercepts), but this behavior can be suppressed by setting `isXIntercept=false` and/or `isZntercept=false`. Column weights for `Y` and the target type for variance shrinkage <sup>[2](#myfootnote2)</sup> can be optionally supplied to `weights` and `targetType`, respectively. 
 
 ```
 est = mlm_backest_sum(dat5)
@@ -177,6 +177,10 @@ Analogous to `matrixLM`'s `mlm_perms` function, `S_score_perms` computes permuta
 S, SPvals = S_score_perms(dat6, nPerms)
 ```
 
+Additional details can be found in the documentation for specific functions. 
+
 ---
 
 <a name="myfootnote1">1</a>. Collins, S. R., Schuldiner, M., Krogan, N. J., & Weissman, J. S. (2006). A strategy for extracting and analyzing large-scale quantitative epistatic interaction data. Genome biology, 7(7), R63.
+
+<a name="myfootnote2">2</a>. Ledoit, O., & Wolf, M. (2003). Improved estimation of the covariance matrix of stock returns with an application to portfolio selection. Journal of empirical finance, 10(5), 603-621. 
