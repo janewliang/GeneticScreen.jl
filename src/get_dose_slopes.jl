@@ -72,7 +72,7 @@ function get_dose_slopes(X::DataFrames.DataFrame,
                 for cond in names(XDosDf)
                     newX[cond] = XDosDf[cond]
                 end
-			end
+            end
         end
     end
     

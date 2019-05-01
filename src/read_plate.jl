@@ -91,8 +91,8 @@ function read_plate(X::DataFrames.DataFrame, Y::DataFrames.DataFrame,
     if spatDegree > 0
         centerRow = Statistics.mean([maximum(Z[rowVar]), minimum(Z[rowVar])])
         centerCol = Statistics.mean([maximum(Z[colVar]), minimum(Z[colVar])])
-        Z = hcat(Z, get_powers(Z[rowVar]-centerRow, Z[colVar]-centerCol, 
-                 collect(1:spatDegree)))
+        Z = hcat(Z, get_powers(Z[rowVar].-centerRow, Z[colVar].-centerCol, 
+                               collect(1:spatDegree)))
         delete!(Z, rowVar)
         delete!(Z, colVar)
     end

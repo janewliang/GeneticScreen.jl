@@ -20,7 +20,7 @@ function get_powers(x::Array{Float64,1}, y::Array{Float64,1},
                     powers::Array{Int64,1}=[1, 2, 3, 4])
     
     # Check that x and y are the same length
-    assert(length(x) == length(y))
+    @assert length(x) == length(y)
 
     # Initialze DataFrame to return
     out = DataFrame(Float64, length(x), 0)
