@@ -19,7 +19,7 @@ DataFrame
 # Some notes
 
 `get_dose_slopes` assumes that within each condition, the concentration levels 
-are ordered by increasing magnitude. 
+are ordered.  
 
 """
 function get_dose_slopes(X::DataFrames.DataFrame, 

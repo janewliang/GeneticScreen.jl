@@ -10,10 +10,10 @@ object containing back-estimated interactions
 
 # Keyword arguments
 
-- isXSum = boolean flag indicating whether a left-out `X` sum contrast 
+- isXSum = boolean flag indicating if a left-out `X` sum contrast 
   interaction was back-estimated AND should not be included in the extracted 
   coefficients. Defaults to `false`. 
-- isZSum = boolean flag indicating whether a left-out `Z` sum contrast 
+- isZSum = boolean flag indicating if a left-out `Z` sum contrast 
   interaction was back-estimated AND should not be included in the extracted 
   coefficients. Defaults to `false`. 
 

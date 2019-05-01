@@ -93,8 +93,8 @@ function read_plate(X::DataFrames.DataFrame, Y::DataFrames.DataFrame,
         centerCol = Statistics.mean([maximum(Z[colVar]), minimum(Z[colVar])])
         Z = hcat(Z, get_powers(Z[rowVar].-centerRow, Z[colVar].-centerCol, 
                                collect(1:spatDegree)))
-        delete!(Z, rowVar)
-        delete!(Z, colVar)
+        deletecols!(Z, rowVar)
+        deletecols!(Z, colVar)
     end
     
     # Create contrasts for the X and Z covariates and convert them to arrays
@@ -179,9 +179,8 @@ RawData object
 
 # Some notes
 
-`readtable`, the DataFrames function used to read in the files, tries to guess 
-delimiters based on file extension. By default, the first row is assumed to be 
-a header.
+Files are read in using `CSV.read`. By default, the first row is assumed to be 
+a header and the delimiter is taken to be ','.
 
 """
 function read_plate(predictorXPath::String, responseYPath::String, 
