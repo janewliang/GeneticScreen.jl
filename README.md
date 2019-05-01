@@ -23,7 +23,7 @@ using GeneticScreen
 
 The `GeneticScreen` package extends [`matrixLM`](https://github.com/janewliang/matrixLM.jl), so all functionality of the `matrixLM` functions is preserved. The README for `matrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
 
-In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times. The simulated data is stored in the "data/" directory as CSV files. 
+In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. The simulated data is stored in the "data/" directory as CSV files. 
 
 ```
 using DataFrames
@@ -63,7 +63,7 @@ Z = convert(Array{Float64,2}, contr(Z_df, [:mut], ["sum"]))
 
 # Total number of condition replicates (rows of Y)
 n = size(X)[1]
-# Total number of mutant replicates (columns of Y)
+# Total number of mutant replicates per plate (columns of Y)
 m = size(Z)[1]
 # Number of conditions
 p = size(X)[2]
@@ -76,12 +76,12 @@ B = rand(-5:5,p,q)
 E = randn(n,m)
 Y = X*B*transpose(Z)+E
 # Write Y to CSV
-CSV.write("./data/Y.csv",  DataFrame(Y))
+CSV.write("./data/Y.csv", DataFrame(Y))
 ```
 
-The `read_plate` function is designed to simplify the construction of a `RawData` object for genetic screening data. The `RawData` can then be used to obtain least squares estimates for matrix linear models. Users can specify the paths to flat files where their X (experimental conditions and row covariates), Y (colony size/response), and Z (mutants and column covariates) matrices are stored. `read_plate` will read in the data using `CSV.read`; additional keyword arguments to be passed into `CSV.read` for all three matrices can be specified. By default, `CSV.read` assumes that the first row a header and that the delimiter is ','. 
+The `read_plate` function is designed to simplify the construction of a `RawData` object for genetic screening data. (The `RawData` is needed to obtain least squares estimates for matrix linear models.) Users can specify the paths to flat files where their X (experimental conditions and row covariates), Y (colony size/response), and Z (mutants and column covariates) matrices are stored. `read_plate` will read in the data using `CSV.read`; additional keyword arguments to be passed into `CSV.read` for all three files can be specified. By default, `CSV.read` assumes that the first row is a header and that the delimiter is ','. 
 
-If one of the columns in the X matrix is a categorical variable for the experimental conditions, `read_plate` can convert it to sum or treatment contrasts using `contr` (see the `matrixLM` package for more information on `contr`). The condition variable name should be specified using the `XCVar` argument and the type of contrast should be specified using `XCType`. If one of the columns in the Z matrix is a categorical variable for the mutants, the analogous argument names are `ZCVar` and `ZCType`. Additional variables in X and Z are kept. In the example below, we use an X matrix that concatenates the conditions with their concentrations, thereby creating 24 distinct "condition-concentrations" (i.e. condition A at concentration 1 is treated as a different "condition" from condition A at concentration 2). By default, both the condition-concentrations in X and the mutants in Z are coded as treatment contrasts, but they are coded as sum contrasts in this example. 
+If one of the columns in the X matrix is a categorical variable for the experimental conditions, `read_plate` can convert it to sum or treatment contrasts using `contr` (see the `matrixLM` package for more information on `contr`). The condition variable name should be specified using the `XCVar` argument and the type of contrast should be specified using `XCType`. If one of the columns in the Z matrix is a categorical variable for the mutants, the analogous argument names are `ZCVar` and `ZCType`. Additional variables in X and Z are retained in the resulting `RawData` object. In the example below, we use an X matrix that concatenates the conditions with their concentrations, thereby creating 24 distinct "condition-concentrations" (i.e. condition A at concentration 1 is treated as a different "condition" from condition A at concentration 2). By default, both the condition-concentrations in X and the mutants in Z are coded as treatment contrasts, but they are coded as sum contrasts in this example. 
 
 ```
 dat1 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Z_df.csv", 
@@ -97,7 +97,7 @@ dat2 = read_plate("./data/Xdos_df.csv", "./data/Y.csv", "./data/Z_df.csv",
                   ZCVar=:mut, ZCType="sum")
 ```
 
-Colonies grown on the edge of the plate tend to be larger because they do not compete for as many resources. One way to try to account for these spatial differences is to include power and cross-product terms for the (centered) row and column indices. In this example, the rows are indexed from 1 to 4 and the columns are indexed from 1-6 in the 4x6 plate. The desired degree of the polynomial can be specified as `spatDegree` and the names of the variables in Z that store the row and column indices can be passed into `rowVar` and `colVar`, respectively. By default, `spatDegree=0` (indicating that no spatial effects should be included), `rowVar=:row`, and `colVar=:column`. In the example below, we have instructed `read_plate` to include spatial effects up to a second-degree polynomial. 
+Colonies grown on the edge of the plate tend to be larger because they do not compete for as many resources. One way to try to account for these spatial differences is to include power and cross-product terms for the (centered) row and column indices. In this example, the rows are indexed from 1 to 4 and the columns are indexed from 1-6 for the 4x6 plate. The desired degree of the polynomial can be specified as `spatDegree` and the names of the variables in Z that store the row and column indices can be passed in as `rowVar` and `colVar`, respectively. By default, `spatDegree=0` (indicating that no spatial effects should be included), `rowVar=:row`, and `colVar=:column`. In the example below, we have instructed `read_plate` to include spatial effects up to a second-degree polynomial. 
 
 ```
 dat3 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Zspat_df.csv", 
@@ -106,7 +106,7 @@ dat3 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Zspat_df.csv",
                   spatDegree=2, rowVar=:row, colVar=:col)
 ```
 
-Instead of reading in X, Y, and Z directly from saved files, it is possible to run `read_plate` for DataFrames that have already been loaded into the current session. Options to convert condition and mutant variables to contrasts, encode dosage slopes, and incorporate spatial effects are still available. This approach may be useful in the user wants to manually pre-process the data or run `contr` on additional categorical variables in `X` and `Z`. 
+Instead of reading in X, Y, and Z directly from saved files, it is possible to run `read_plate` for DataFrames that have already been loaded into the current session. The arguments to convert condition and mutant variables to contrasts, encode dosage slopes, and incorporate spatial effects remain the same. This approach may be useful if the user wants to manually pre-process the data or run `contr` on additional categorical covariates in `X` and `Z`. 
 
 ```
 dat4 = read_plate(X_df, DataFrame(Y), Z_df, 
@@ -114,7 +114,7 @@ dat4 = read_plate(X_df, DataFrame(Y), Z_df,
                   ZCVar=:mut, ZCType="sum")
 ```
 
-Finally, `read_plate` also provides the option to standardize Y by subtracting the row medians and dividing by the column IQRs if the user sets `isYstd=true`, as seen below. By default, `isYstd=false` and Y is not standardized. 
+Finally, `read_plate` also provides the option to standardize Y by subtracting the row medians and dividing by the column IQRs if the user sets `isYstd=true`, as seen below. By default, `isYstd=false` and Y will not be standardized. 
 
 ```
 dat5 = read_plate(X_df, DataFrame(Y), Z_df, 
@@ -124,7 +124,7 @@ dat5 = read_plate(X_df, DataFrame(Y), Z_df,
 
 The `mlm` function from `matrixLM` computes least-squares coefficient estimates for matrix linear models and returns an object of type `Mlm`. `Mlm` objects include variables for the coefficient estimates (`B`), the coefficient variance estimates (`varB`), and the estimated variance of the errors (`sigma`). 
 
-Coding the conditions in X and the mutants in Z as sum contrasts is convenient because interpretation of the main effects and interactions is with respect to average colony sizes. However, to avoid over-parameterization, the last condition and last mutant will be left out of the contrasts. `mlm_backest_sum` extends `mlm` by additionally back-estimating one or both of the "left-out" sum contrasts for the conditions and mutants. By default, both of the "left-out" sum contrasts will be estimated, but this behavior can be modified by setting `isXSum` and/or `isZSum` to `false`. `mlm_backest_sum` currently does not support back-estimation of contrasts when additional covariates are included in X and/or Z. 
+Coding the conditions in X and the mutants in Z as sum contrasts is convenient because interpretation of the main effects and interactions will be with respect to average colony sizes. However, to avoid over-parameterization, the last condition and last mutant will be left out of the contrasts fed into the model. `mlm_backest_sum` extends `mlm` by additionally back-estimating one or both of the "left-out" sum contrasts for the conditions and mutants. By default, both of the "left-out" sum contrasts will be estimated, but this behavior can be modified by setting `isXSum` and/or `isZSum` to `false`. `mlm_backest_sum` currently does not support back-estimation of contrasts when additional covariates are included in X and/or Z. 
 
 As with `mlm`, the `mlm_backest_sum` function estimates both row and column main effects (X and Z intercepts), but this behavior can be suppressed by setting `isXIntercept=false` and/or `isZntercept=false`. Column weights for `Y` and the target type for variance shrinkage can be optionally supplied to `weights` and `targetType`, respectively. 
 
@@ -138,19 +138,19 @@ Note that the resulting matrix of coefficient estimates has 21 rows (20 experime
 size(coef(est))
 ```
 
-The matrix of t-statistics defined as `est.B ./ sqrt.(est.varB)`) likewise includes all 20x8 interactions. By default, `t_stat` does not return the corresponding t-statistics for any main effects that were estimated by `mlm_backest_sum`, but they will be returned if `isMainEff=true`. 
-
-```
-size(t_stat(est))
-```
-
 The `coef` access function has been extended to suppress returning the "left-out" estimates if `isXSum` and/or `isZSum` is set to `true`. The `matrixLM` functions that compute predicted values (`predict`) and residuals (`resid`) have likewise been extended to include options for suppressing the "left-out" estimates. 
 
 ```
 size(coef(est, isXSum=true, isZSum=true))
 ```
 
-Analogous to `matrixLM`'s `mlm_perms` function, `mlm_backest_sum_perms` computes permutation p-values that include the "left-out" estimates and will run the permutations in parallel when possible. The illustrative example below only runs 5 permutations, but a different number can be specified as the second argument. By default, the function used to permute `Y` is `shuffle_rows`, which shuffles the rows for `Y`. Alternative functions to permute `Y`, such as `shuffle_cols`, can be passed into the argument `permFun`. Keyword arguments to be passed into `mlm_backest_sum` or `matrixLM`'s `tstat` function can be specified by the user. 
+The matrix of t-statistics (defined as `est.B ./ sqrt.(est.varB)`) corresponding to this `Mlm` includes all 20x8 interactions. By default, `t_stat` does not return the corresponding t-statistics for any main effects that were estimated by `mlm_backest_sum`, but they will be returned if `isMainEff=true`. 
+
+```
+size(t_stat(est))
+```
+
+Analogous to `matrixLM`'s `mlm_perms` function, `mlm_backest_sum_perms` computes permutation p-values that include the "left-out" estimates and will run the permutations in parallel when possible. The illustrative example below only runs 5 permutations, but a different number can be specified as the second argument. By default, the function used to permute `Y` is `shuffle_rows`, which shuffles the rows for `Y`. Alternative functions for permuting `Y`, such as `shuffle_cols`, can be passed into the argument `permFun`. Keyword arguments to be passed into `mlm_backest_sum` or `matrixLM`'s `tstat` function can be specified by the user. 
 
 ```
 nPerms = 5
