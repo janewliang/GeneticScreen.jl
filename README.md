@@ -157,7 +157,7 @@ nPerms = 5
 tStats, pVals = mlm_backest_sum_perms(dat5, nPerms)
 ```
 
-The `GeneticScreen` package also provides an implementation of Collins et al. (2006) <sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as over-parameterized treatment contrasts with no intercept. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
+The `GeneticScreen` package also provides an implementation of Collins et al. (2006) <sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as treatment contrasts but no intercept. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
 
 ```
 dat6 = read_plate(X_df, DataFrame(Y), Z_df, 
