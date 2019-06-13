@@ -60,6 +60,7 @@ Response object
 """
 function predict(MLM::Mlm, newPredictors::Predictors=MLM.data.predictors; 
                  isXSum::Bool=false, isZSum::Bool=false)
+    
   	# Include X and Z intercepts in new data if necessary
   	if MLM.data.predictors.isXIntercept==true && 
        newPredictors.isXIntercept==false
