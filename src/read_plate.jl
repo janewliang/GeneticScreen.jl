@@ -81,16 +81,15 @@ function read_plate(X::DataFrames.DataFrame, Y::DataFrames.DataFrame,
     # Standardize rows of Y by median and IQR
     if isYstd == true 
         for i in 1:size(Y,1)
-            Y[i,:] = (Y[i,:] .- Statistics.median(vec(Y[i,:]))) ./ 
-                     iqr(vec(Y[i,:]))
+            Y[i,:] = (Y[i,:] .- median(vec(Y[i,:]))) ./ iqr(vec(Y[i,:]))
         end
     end
     
     # If spatDegree is specified as a positive integer, add spatial effects 
     # and delete the row/column variables from Z
     if spatDegree > 0
-        centerRow = Statistics.mean([maximum(Z[rowVar]), minimum(Z[rowVar])])
-        centerCol = Statistics.mean([maximum(Z[colVar]), minimum(Z[colVar])])
+        centerRow = mean([maximum(Z[rowVar]), minimum(Z[rowVar])])
+        centerCol = mean([maximum(Z[colVar]), minimum(Z[colVar])])
         Z = hcat(Z, get_powers(Z[rowVar].-centerRow, Z[colVar].-centerCol, 
                                collect(1:spatDegree)))
         deletecols!(Z, rowVar)

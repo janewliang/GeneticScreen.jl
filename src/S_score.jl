@@ -47,7 +47,7 @@ function S_score(data::RawData; isVarFloor::Bool=true)
             thisClone = Y[:, allClones[:,j].==1]
 
             # median(colony size for that clone)
-            muCont[j] = Statistics.median(thisClone) 
+            muCont[j] = median(thisClone) 
         end
     # Otherwise, get mean, variance, and number of measurements of colony size 
     # over clones
@@ -60,9 +60,9 @@ function S_score(data::RawData; isVarFloor::Bool=true)
             thisClone = Y[:, allClones[:,j].==1]
 
             # mean(colony size for that clone)
-            muCont[j] = Statistics.mean(thisClone) 
+            muCont[j] = mean(thisClone) 
             # var(colony size for that clone)
-            varCont[j] = Statistics.var(thisClone) 
+            varCont[j] = var(thisClone) 
             # num of measurements of colony sizes for that clone
             nCont[j] = length(thisClone) 
         end
@@ -80,9 +80,9 @@ function S_score(data::RawData; isVarFloor::Bool=true)
         thisCloneCond = Y[allConds[:,i].==1, allClones[:,j].==1]
 
         # mean(colony sizes for that clone and condition)
-        muExp[i,j] = Statistics.mean(thisCloneCond) 
+        muExp[i,j] = mean(thisCloneCond) 
         # var(colony sizes for that clone and condition)
-        varExp[i,j] = Statistics.var(thisCloneCond) 
+        varExp[i,j] = var(thisCloneCond) 
         # num of measurements of colony sizes for that clone and condition
         nExp[i,j] = length(thisCloneCond) 
     end
@@ -91,11 +91,11 @@ function S_score(data::RawData; isVarFloor::Bool=true)
     # the S score
     if (isVarFloor == true) 
         # Control variance with lower bound. 
-        varContLB = (muCont * Statistics.median(sqrt.(varExp)./muExp)).^2
-        varCont = max.(transpose(Statistics.median(varExp, dims=1)), varContLB)
+        varContLB = (muCont * median(sqrt.(varExp)./muExp)).^2
+        varCont = max.(transpose(median(varExp, dims=1)), varContLB)
         
         # Control sample size. 
-        nCont = Statistics.median(nExp)
+        nCont = median(nExp)
         
         # Experimental variance with lower bound. 
         sdExpLoess = loess(vec(muExp), vec(sqrt.(varExp)))
