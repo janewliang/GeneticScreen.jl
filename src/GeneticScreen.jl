@@ -2,6 +2,8 @@ module GeneticScreen
 
 
 using matrixLM
+import matrixLM.calc_preds!, matrixLM.calc_preds!, 
+    matrixLM.calc_resid, matrixLM.calc_resid!
 
 using DataFrames
 using Loess
