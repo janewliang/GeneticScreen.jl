@@ -4,7 +4,7 @@ Pre- and post-processing for the analysis of high-throughput genetic screens usi
 
 `GeneticScreen` is an extension of the [`matrixLM`](https://github.com/janewliang/matrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
-## Install
+## Installation
 
 The `GeneticScreen` package can be installed by running: 
 
