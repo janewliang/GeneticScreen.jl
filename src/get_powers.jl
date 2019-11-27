@@ -27,8 +27,8 @@ function get_powers(x::Array{Float64,1}, y::Array{Float64,1},
     
     # Get powers of x and y
     for i in 1:length(powers)
-        out[:, Symbol(string("X", powers[i]))] = x.^powers[i]
-            out[:, Symbol(string("Y", powers[i]))] = y.^powers[i]
+        out[!, Symbol(string("X", powers[i]))] = x.^powers[i]
+            out[!, Symbol(string("Y", powers[i]))] = y.^powers[i]
     end
     
     # Get cross products

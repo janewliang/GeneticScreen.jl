@@ -93,8 +93,8 @@ function read_plate(X::DataFrames.DataFrame, Y::DataFrames.DataFrame,
         Z = hcat(Z, get_powers(Z[!, rowVar].-centerRow, 
                                Z[!, colVar].-centerCol, 
                                collect(1:spatDegree)))
-        deletecols!(Z, rowVar)
-        deletecols!(Z, colVar)
+        select!(Z, Not(rowVar))
+        select!(Z, Not(colVar))
     end
     
     # Create contrasts for the X and Z covariates and convert them to arrays
