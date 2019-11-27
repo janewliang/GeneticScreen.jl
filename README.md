@@ -10,10 +10,11 @@ The `GeneticScreen` package can be installed by running:
 
 ```
 using Pkg
+Pkg.add(PackageSpec(url="https://github.com/janewliang/matrixLM.jl", rev="master")) # Install matrixLM dependency first
 Pkg.add(PackageSpec(url="https://github.com/janewliang/GeneticScreen.jl", rev="master"))
 ```
 
-`GeneticScreen` was developed in [Julia v1.1](https://julialang.org/downloads/). 
+`GeneticScreen` was developed in [Julia v1.3](https://julialang.org/downloads/). 
 
 ## Usage
 
@@ -38,8 +39,9 @@ Xdos_df = repeat(DataFrame(cond=repeat(["A", "B", "C", "D", "E"], inner=4),
 CSV.write("./data/Xdos_df.csv", Xdos_df)
 
 # Create another DataFrame that concatenates the conditions and concentrations
-X_df = repeat(DataFrame(cond_conc=[string(Xdos_df[:cond][i], Xdos_df[:conc][i]) 
-                        for i in 1:20]), 2)
+X_df = repeat(DataFrame(cond_conc=[string(Xdos_df[!,:cond][i], 
+                                          Xdos_df[!,:conc][i]) 
+                                   for i in 1:20]), 2)
 # Write X_df to CSV
 CSV.write("./data/X_df.csv", X_df)
 
@@ -138,7 +140,7 @@ Note that the resulting matrix of coefficient estimates has 21 rows (20 experime
 size(coef(est))
 ```
 
-The `coef` access function has been extended to suppress returning the "left-out" estimates if `isXSum` and/or `isZSum` is set to `true`. The `matrixLM` functions that compute predicted values (`predict`) and residuals (`resid`) have likewise been extended to include options for suppressing the "left-out" estimates. 
+The `coef` access function has been extended to suppress returning the "left-out" estimates if `isXSum` and/or `isZSum` is set to `true`. The `matrixLM` functions that compute fitted values (`fitted`), predicted values (`predict`) and residuals (`resid`) have likewise been extended to include options for suppressing the "left-out" estimates. In this example, all three of these functions will raise an error if the user fails to set`isXSum=true` and `isZSum=true` (e.g. `fitted(est)` will raise a dimension error, but `fitted(est, isXSum=true, isZSum=true)` will not). This is because the estimates were obtained from a call to `mlm_backest_sum` with `isXSum` and`isZSum` both set to `true` (the default), such that the output includes the "left-out" sum contrasts for both the conditions and mutants. 
 
 ```
 size(coef(est, isXSum=true, isZSum=true))
