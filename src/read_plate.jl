@@ -88,9 +88,10 @@ function read_plate(X::DataFrames.DataFrame, Y::DataFrames.DataFrame,
     # If spatDegree is specified as a positive integer, add spatial effects 
     # and delete the row/column variables from Z
     if spatDegree > 0
-        centerRow = mean([maximum(Z[rowVar]), minimum(Z[rowVar])])
-        centerCol = mean([maximum(Z[colVar]), minimum(Z[colVar])])
-        Z = hcat(Z, get_powers(Z[rowVar].-centerRow, Z[colVar].-centerCol, 
+        centerRow = mean([maximum(Z[!, rowVar]), minimum(Z[!, rowVar])])
+        centerCol = mean([maximum(Z[!, colVar]), minimum(Z[!, colVar])])
+        Z = hcat(Z, get_powers(Z[!, rowVar].-centerRow, 
+                               Z[!, colVar].-centerCol, 
                                collect(1:spatDegree)))
         deletecols!(Z, rowVar)
         deletecols!(Z, colVar)
