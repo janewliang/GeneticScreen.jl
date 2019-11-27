@@ -36,9 +36,9 @@ function get_dose_slopes(X::DataFrames.DataFrame,
     end
 
     # Pull out every condition 
-    allConds = unique(X[conditionVar])
+    allConds = unique(X[:,conditionVar])
     # For each condition, pull out all of the concentrations
-    concs = [X[concentrationVar][cond .== X[conditionVar]] 
+    concs = [X[:,concentrationVar][cond .== X[:,conditionVar]] 
              for cond in allConds]
     # Get the number of unique concentration levels found for each condition
     numLevels = [length(unique(conc)) for conc in concs]
@@ -49,8 +49,8 @@ function get_dose_slopes(X::DataFrames.DataFrame,
     # Iterate through conditions and assign slopes for concentrations
     for i in 1:length(allConds)
         for j in 1:length(unique(concs[i]))
-            XDos[(X[conditionVar] .== allConds[i]) .& 
-                 (X[concentrationVar] .== unique(concs[i])[j]), i] .= j
+            XDos[(X[:,conditionVar] .== allConds[i]) .& 
+                 (X[:,concentrationVar] .== unique(concs[i])[j]), i] .= j
         end
     end
     
@@ -65,12 +65,12 @@ function get_dose_slopes(X::DataFrames.DataFrame,
     for var in names(X)
         if !in(var, [conditionVar, concentrationVar])
             # Add the other variables to the new DataFrame
-            newX[var] = X[var]
+            newX[!,var] = X[:,var]
         else
             # Add the DataFrame of dosage slopes		
             if var==conditionVar
                 for cond in names(XDosDf)
-                    newX[cond] = XDosDf[cond]
+                    newX[!,cond] = XDosDf[:,cond]
                 end
             end
         end
