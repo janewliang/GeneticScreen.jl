@@ -8,7 +8,6 @@ import matrixLM.calc_preds, matrixLM.calc_preds!,
 using DataFrames
 using Loess
 using Statistics
-import Statistics.mean, Statistics.median, Statistics.var
 import StatsBase.iqr
 using CSV
 
