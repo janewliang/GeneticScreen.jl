@@ -2,7 +2,7 @@
 
 Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299), for more details. S-scores implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
 
-`GeneticScreen` is an extension of the [`matrixLM`](https://github.com/janewliang/matrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
+`GeneticScreen` is an extension of the [`matrixLM`](https://github.com/senresearch/matrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
 ## Installation
 
@@ -11,11 +11,11 @@ The `GeneticScreen` package can be installed by running:
 ```
 using Pkg
 # Install matrixLM dependency first
-Pkg.add(PackageSpec(url="https://github.com/janewliang/matrixLM.jl", rev="master")) 
-Pkg.add(PackageSpec(url="https://github.com/janewliang/GeneticScreen.jl", rev="master"))
+Pkg.add(PackageSpec(url="https://github.com/senresearch/matrixLM.jl", rev="master")) 
+Pkg.add(PackageSpec(url="https://github.com/senresearch/GeneticScreen.jl", rev="master"))
 ```
 
-`GeneticScreen` was developed in [Julia v1.3](https://julialang.org/downloads/). 
+`GeneticScreen` was developed in [Julia v1.5.3](https://julialang.org/downloads/). 
 
 ## Usage
 
@@ -23,9 +23,9 @@ Pkg.add(PackageSpec(url="https://github.com/janewliang/GeneticScreen.jl", rev="m
 using GeneticScreen
 ```
 
-The `GeneticScreen` package extends [`matrixLM`](https://github.com/janewliang/matrixLM.jl), so all functionality of the `matrixLM` functions is preserved. The README for `matrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
+The `GeneticScreen` package extends [`matrixLM`](https://github.com/senresearch/matrixLM.jl), so all functionality of the `matrixLM` functions is preserved. The README for `matrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
 
-In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. The simulated data is stored in the "data/" directory as CSV files. 
+In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. The simulated data will be exported as CSV files saved in the working directory. 
 
 ```
 using DataFrames
@@ -37,32 +37,32 @@ using Random
 Xdos_df = repeat(DataFrame(cond=repeat(["A", "B", "C", "D", "E"], inner=4), 
                            conc=repeat(1:4, 5)), 2)
 # Write Xdos_df to CSV
-CSV.write("./data/Xdos_df.csv", Xdos_df)
+CSV.write("Xdos_df.csv", Xdos_df)
 
 # Create another DataFrame that concatenates the conditions and concentrations
 X_df = repeat(DataFrame(cond_conc=[string(Xdos_df[!,:cond][i], 
                                           Xdos_df[!,:conc][i]) 
                                    for i in 1:20]), 2)
 # Write X_df to CSV
-CSV.write("./data/X_df.csv", X_df)
+CSV.write("X_df.csv", X_df)
 
 # Generate 8 mutants, each replicated 3 times
 Z_df = DataFrame(mut=repeat(1:8, 3))
 # Write Z_df to CSV
-CSV.write("./data/Z_df.csv", Z_df)
+CSV.write("Z_df.csv", Z_df)
 
 # Generate the same 8 mutants with 3 replicates, and also include the spatial 
 # row and column positions on the 4x6 plate
 Zspat_df = DataFrame(mut=repeat(1:8, 3), 
                      row=repeat(1:4, inner=6), col=repeat(1:6, 4))
 # Write Zspat_df to CSV
-CSV.write("./data/Zspat_df.csv", Zspat_df)
+CSV.write("Zspat_df.csv", Zspat_df)
 
 # Use `contr` to get sum contrasts for the concatenated 
 # condition-concentrations in X_df and the mutants in Z_df, and convert them 
 # into 2d arrays
-X = convert(Array{Float64,2}, contr(X_df, [:cond_conc], ["sum"]))
-Z = convert(Array{Float64,2}, contr(Z_df, [:mut], ["sum"]))
+X = convert(Array{Float64,2}, contr(X_df, ["cond_conc"], ["sum"]))
+Z = convert(Array{Float64,2}, contr(Z_df, ["mut"], ["sum"]))
 
 # Total number of condition replicates (rows of Y)
 n = size(X)[1]
@@ -79,7 +79,7 @@ B = rand(-5:5,p,q)
 E = randn(n,m)
 Y = X*B*transpose(Z)+E
 # Write Y to CSV
-CSV.write("./data/Y.csv", DataFrame(Y))
+CSV.write("Y.csv", DataFrame(Y))
 ```
 
 The `read_plate` function is designed to simplify the construction of a `RawData` object for genetic screening data. (The `RawData` is needed to obtain least squares estimates for matrix linear models.) Users can specify the paths to flat files where their X (experimental conditions and row covariates), Y (colony size/response), and Z (mutants and column covariates) matrices are stored. `read_plate` will read in the data using `CSV.read`; additional keyword arguments to be passed into `CSV.read` for all three files can be specified. By default, `CSV.read` assumes that the first row is a header and that the delimiter is ','. 
@@ -87,7 +87,7 @@ The `read_plate` function is designed to simplify the construction of a `RawData
 If one of the columns in the X matrix is a categorical variable for the experimental conditions, `read_plate` can convert it to sum or treatment contrasts using `contr` (see the `matrixLM` package for more information on `contr`). The condition variable name should be specified using the `XCVar` argument and the type of contrast should be specified using `XCType`. If one of the columns in the Z matrix is a categorical variable for the mutants, the analogous argument names are `ZCVar` and `ZCType`. Additional variables in X and Z are retained in the resulting `RawData` object. In the example below, we use an X matrix that concatenates the conditions with their concentrations, thereby creating 24 distinct "condition-concentrations" (i.e. condition A at concentration 1 is treated as a different "condition" from condition A at concentration 2). By default, both the condition-concentrations in X and the mutants in Z are coded as treatment contrasts, but they are coded as sum contrasts in this example. 
 
 ```
-dat1 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Z_df.csv", 
+dat1 = read_plate("X_df.csv", "Y.csv", "Z_df.csv", 
                   XCVar=:cond_conc, XCType="sum", 
                   ZCVar=:mut, ZCType="sum")
 ```
@@ -95,7 +95,7 @@ dat1 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Z_df.csv",
 If monotonicity is a reasonable assumption, it may be of interest to consider the concentrations of the different conditions as dosage slopes. If `isXDos=true`, `read_plate` will code the concentrations in `XConcentrationVar` as dosage slopes for each condition in `XConditionVar`. This is done through a call to the `get_dose_slopes` function, which assumes that concentrations are ordered within dosage slopes. 
 
 ```
-dat2 = read_plate("./data/Xdos_df.csv", "./data/Y.csv", "./data/Z_df.csv", 
+dat2 = read_plate("Xdos_df.csv", "Y.csv", "Z_df.csv", 
                   isXDos=true, XConditionVar=:cond, XConcentrationVar=:conc, 
                   ZCVar=:mut, ZCType="sum")
 ```
@@ -103,7 +103,7 @@ dat2 = read_plate("./data/Xdos_df.csv", "./data/Y.csv", "./data/Z_df.csv",
 Colonies grown on the edge of the plate tend to be larger because they do not compete for as many resources. One way to try to account for these spatial differences is to include power and cross-product terms for the (centered) row and column indices. In this example, the rows are indexed from 1 to 4 and the columns are indexed from 1-6 for the 4x6 plate. The desired degree of the polynomial can be specified as `spatDegree` and the names of the variables in Z that store the row and column indices can be passed in as `rowVar` and `colVar`, respectively. By default, `spatDegree=0` (indicating that no spatial effects should be included), `rowVar=:row`, and `colVar=:column`. In the example below, we have instructed `read_plate` to include spatial effects up to a second-degree polynomial. 
 
 ```
-dat3 = read_plate("./data/X_df.csv", "./data/Y.csv", "./data/Zspat_df.csv", 
+dat3 = read_plate("X_df.csv", "Y.csv", "Zspat_df.csv", 
                   XCVar=:cond_conc, XCType="sum", 
                   ZCVar=:mut, ZCType="sum", 
                   spatDegree=2, rowVar=:row, colVar=:col)

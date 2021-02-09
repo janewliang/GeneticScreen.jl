@@ -194,9 +194,9 @@ function read_plate(predictorXPath::String, responseYPath::String,
                     rowVar::Symbol=:row, colVar::Symbol=:column, funArgs...)
     
     # Read in the response and predictor arrays
-    X = CSV.read(predictorXPath; funArgs...)
-    Y = CSV.read(responseYPath; funArgs...)
-    Z = CSV.read(predictorZPath; funArgs...)
+    X = CSV.read(predictorXPath, DataFrame; funArgs...)
+    Y = CSV.read(responseYPath, DataFrame; funArgs...)
+    Z = CSV.read(predictorZPath, DataFrame; funArgs...)
     
     # Pass the arrays to the base read_plate function
     return read_plate(X, Y, Z; 
