@@ -56,7 +56,7 @@ function get_dose_slopes(X::DataFrames.DataFrame,
     
     # Convert results to a DataFrame and rename columns 
     XDosDf = convert(DataFrame, XDos)
-    names!(XDosDf, [Symbol(cond) for cond in allConds])
+    rename!(XDosDf, [Symbol(cond) for cond in allConds])
     
     # Initialize new DataFrame
     newX = DataFrame()
