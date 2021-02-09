@@ -26,13 +26,13 @@ function get_dose_slopes(X::DataFrames.DataFrame,
                          conditionVar::Symbol, concentrationVar::Symbol)
 
     # Ensure that conditionVar is a variable in X
-    if !in(conditionVar, names(X))
-        error("conditionVar is not a variable in the DataFrame")
+    if !in(conditionVar, propertynames(X))
+        error(string(conditionVar, " is not a variable in the DataFrame"))
     end
 
     # Ensure that concentrationVar is a variable in X
-    if !in(concentrationVar, names(X))
-        error("concentrationVar is not a variable in the DataFrame")
+    if !in(concentrationVar, propertynames(X))
+        error(string(concentrationVar, " is not a variable in the DataFrame"))
     end
 
     # Pull out every condition 
@@ -62,14 +62,14 @@ function get_dose_slopes(X::DataFrames.DataFrame,
     newX = DataFrame()
     
 	# Iterate through variables in X
-    for var in names(X)
+    for var in propertynames(X)
         if !in(var, [conditionVar, concentrationVar])
             # Add the other variables to the new DataFrame
             newX[!,var] = X[:,var]
         else
             # Add the DataFrame of dosage slopes		
             if var==conditionVar
-                for cond in names(XDosDf)
+                for cond in propertynames(XDosDf)
                     newX[!,cond] = XDosDf[:,cond]
                 end
             end

@@ -61,8 +61,8 @@ CSV.write("Zspat_df.csv", Zspat_df)
 # Use `contr` to get sum contrasts for the concatenated 
 # condition-concentrations in X_df and the mutants in Z_df, and convert them 
 # into 2d arrays
-X = convert(Array{Float64,2}, contr(X_df, ["cond_conc"], ["sum"]))
-Z = convert(Array{Float64,2}, contr(Z_df, ["mut"], ["sum"]))
+X = convert(Array{Float64,2}, contr(X_df, [:cond_conc], ["sum"]))
+Z = convert(Array{Float64,2}, contr(Z_df, [:mut], ["sum"]))
 
 # Total number of condition replicates (rows of Y)
 n = size(X)[1]
