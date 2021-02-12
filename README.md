@@ -1,29 +1,29 @@
-# GeneticScreen
+# GeneticScreens
 
-Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299), for more details. S-scores implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
+Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299) and [reproducible code](https://github.com/senresearch/mlm_gs_supplement), for more details. S-scores are implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
 
-`GeneticScreen` is an extension of the [`matrixLM`](https://github.com/senresearch/matrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
+`GeneticScreens` is an extension of the [`MatrixLM`](https://github.com/senresearch/MatrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
 ## Installation
 
-The `GeneticScreen` package can be installed by running: 
+The `GeneticScreens` package can be installed by running: 
 
 ```
 using Pkg
-# Install matrixLM dependency first
-Pkg.add(PackageSpec(url="https://github.com/senresearch/matrixLM.jl", rev="master")) 
-Pkg.add(PackageSpec(url="https://github.com/senresearch/GeneticScreen.jl", rev="master"))
+# Install MatrixLM dependency first
+Pkg.add(PackageSpec(url="https://github.com/senresearch/MatrixLM.jl", rev="master")) 
+Pkg.add(PackageSpec(url="https://github.com/senresearch/GeneticScreens.jl", rev="master"))
 ```
 
-`GeneticScreen` was developed in [Julia v1.5.3](https://julialang.org/downloads/). 
+`GeneticScreens` was developed in [Julia v1.5.3](https://julialang.org/downloads/). 
 
 ## Usage
 
 ```
-using GeneticScreen
+using GeneticScreens
 ```
 
-The `GeneticScreen` package extends [`matrixLM`](https://github.com/senresearch/matrixLM.jl), so all functionality of the `matrixLM` functions is preserved. The README for `matrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
+The `GeneticScreens` package extends [`MatrixLM`](https://github.com/senresearch/MatrixLM.jl), so all functionality of the `MatrixLM` functions is preserved. The README for `MatrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
 
 In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. The simulated data will be exported as CSV files saved in the working directory. 
 

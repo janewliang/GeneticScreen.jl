@@ -1,4 +1,4 @@
-name = "GeneticScreen"
+name = "GeneticScreens"
 uuid = "4867d790-6146-11e9-2b04-0dd79efdd1cc"
 authors = ["Jane Liang"]
 version = "0.1.0"
@@ -10,4 +10,4 @@ Loess = "4345ca2d-374a-55d4-8d30-97f9976e7612"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-matrixLM = "37290134-6146-11e9-0c71-a5c489be1f53"
+MatrixLM = "37290134-6146-11e9-0c71-a5c489be1f53"
