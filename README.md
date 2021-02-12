@@ -1,6 +1,6 @@
 # GeneticScreens
 
-Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299) and [reproducible code](https://github.com/senresearch/mlm_gs_supplement), for more details. S-scores are implemented based on Collins et al. (2006)<sup>[1](#myfootnote1)</sup>. 
+Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299), and its [reproducible code](https://github.com/senresearch/mlm_gs_supplement) for more details. S-scores are implemented based on Collins et al. (2006)<sup>[1](#myfootnote1)</sup>. 
 
 `GeneticScreens` is an extension of the [`MatrixLM`](https://github.com/senresearch/MatrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
