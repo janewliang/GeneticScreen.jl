@@ -1,6 +1,6 @@
 # GeneticScreens
 
-Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299) and [reproducible code](https://github.com/senresearch/mlm_gs_supplement), for more details. S-scores are implemented based on Collins et al. (2006) <sup>[1](#myfootnote1)</sup>. 
+Pre- and post-processing for the analysis of high-throughput genetic screens using matrix linear models. See the associated paper, ["Matrix linear models for high-throughput chemical genetic screens"](http://dx.doi.org/10.1534/genetics.119.302299) and [reproducible code](https://github.com/senresearch/mlm_gs_supplement), for more details. S-scores are implemented based on Collins et al. (2006)<sup>[1](#myfootnote1)</sup>. 
 
 `GeneticScreens` is an extension of the [`MatrixLM`](https://github.com/senresearch/MatrixLM.jl) package, which provides core functions for closed-form least squares estimates for matrix linear models. 
 
@@ -129,7 +129,7 @@ The `mlm` function from `matrixLM` computes least-squares coefficient estimates 
 
 Coding the conditions in X and the mutants in Z as sum contrasts is convenient because interpretation of the main effects and interactions will be with respect to average colony sizes. However, to avoid over-parameterization, the last condition and last mutant will be left out of the contrasts fed into the model. `mlm_backest_sum` extends `mlm` by additionally back-estimating one or both of the "left-out" sum contrasts for the conditions and mutants. By default, both of the "left-out" sum contrasts will be estimated, but this behavior can be modified by setting `isXSum` and/or `isZSum` to `false`. `mlm_backest_sum` currently does not support back-estimation of contrasts when additional covariates are included in X and/or Z. 
 
-As with `mlm`, the `mlm_backest_sum` function estimates both row and column main effects (X and Z intercepts), but this behavior can be suppressed by setting `isXIntercept=false` and/or `isZntercept=false`. Column weights for `Y` and the target type for variance shrinkage <sup>[2](#myfootnote2)</sup> can be optionally supplied to `weights` and `targetType`, respectively. 
+As with `mlm`, the `mlm_backest_sum` function estimates both row and column main effects (X and Z intercepts), but this behavior can be suppressed by setting `isXIntercept=false` and/or `isZntercept=false`. Column weights for `Y` and the target type for variance shrinkage<sup>[2](#myfootnote2)</sup> can be optionally supplied to `weights` and `targetType`, respectively. 
 
 ```
 est = mlm_backest_sum(dat5)
@@ -160,7 +160,7 @@ nPerms = 5
 tStats, pVals = mlm_backest_sum_perms(dat5, nPerms)
 ```
 
-The `GeneticScreen` package also provides an implementation of Collins et al. (2006) <sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as treatment contrasts but no intercept. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
+The `GeneticScreen` package also provides an implementation of Collins et al. (2006)<sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as treatment contrasts but no intercept. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
 
 ```
 dat6 = read_plate(X_df, DataFrame(Y), Z_df, 
@@ -168,7 +168,7 @@ dat6 = read_plate(X_df, DataFrame(Y), Z_df,
                   ZCVar=:mut, ZCType="noint", isYstd=true)
 ```
 
-By default, the `S_score` function performs the variance flooring and adjustments described by Collins et al. (2006) <sup>[1](#myfootnote1)</sup> (`isVarFloor=true`). 
+By default, the `S_score` function performs the variance flooring and adjustments described by Collins et al. (2006)<sup>[1](#myfootnote1)</sup> (`isVarFloor=true`). 
 
 ```
 S = S_score(dat6)
