@@ -12,9 +12,13 @@ The `GeneticScreens` package can be installed by running:
 
 ```
 using Pkg
-# Install MatrixLM dependency first
-Pkg.add(PackageSpec(url="https://github.com/senresearch/MatrixLM.jl", rev="master")) 
-Pkg.add(PackageSpec(url="https://github.com/senresearch/GeneticScreens.jl", rev="master"))
+Pkg.add("GeneticScreens")
+```
+
+For the most recent version, use:
+```
+using Pkg
+Pkg.add(url = "https://github.com/senresearch/GeneticScreens.jl", rev="master")
 ```
 
 ## Usage
@@ -147,7 +151,7 @@ The `coef` access function has been extended to suppress returning the "left-out
 size(coef(est, isXSum=true, isZSum=true))
 ```
 
-The matrix of t-statistics (defined as `est.B ./ sqrt.(est.varB)`) corresponding to this `Mlm` includes all 20x8 interactions. By default, `t_stat` does not return the corresponding t-statistics for any main effects that were estimated by `mlm_backest_sum`, but they will be returned if `isMainEff=true`. 
+The matrix of t-statistics (defined as `est.B ./ sqrt.(est.varB)`) corresponding to this `Mlm` object includes all 20x8 interactions. By default, `t_stat` does not return the corresponding t-statistics for any main effects that were estimated by `mlm_backest_sum`, but they will be returned if `isMainEff=true`. 
 
 ```
 size(t_stat(est))
@@ -160,7 +164,7 @@ nPerms = 5
 tStats, pVals = mlm_backest_sum_perms(dat5, nPerms)
 ```
 
-The `GeneticScreen` package also provides an implementation of Collins et al. (2006)<sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as treatment contrasts but no intercept. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
+The `GeneticScreen` package also provides an implementation of Collins et al. (2006)<sup>[1](#myfootnote1)</sup>'s S scores. To run the `S_score` function, one must construct a RawData object where X and Z encode the experimental conditions and mutants as treatment contrasts with no intercepts. This can be done by running `read_plate` with the arguments `XCType="noint"` and `ZCType="noint"`. No other covariates should be included in X and Z. 
 
 ```
 dat6 = read_plate(X_df, DataFrame(Y), Z_df, 
