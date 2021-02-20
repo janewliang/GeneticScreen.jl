@@ -29,7 +29,7 @@ using GeneticScreens
 
 The `GeneticScreens` package extends [`MatrixLM`](https://github.com/senresearch/MatrixLM.jl), so all functionality of the `MatrixLM` functions is preserved. The README for `MatrixLM` provides examples of usage for the core least squares estimation functions that may be of interest to the user. 
 
-In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. The simulated data will be exported as CSV files saved in the working directory. 
+In this illustrative example, consider simulated data from a tiny genetic screening experiment run on a single 4x6 plate. There were 5 experimental conditions (A-E), each with 4 monotonically ordered dosage concentration levels (1-4) replicated 2 times. There were 8 mutants, each replicated 3 times per plate. Note that the simulated data will be exported as CSV files saved in the working directory. 
 
 ```
 using DataFrames
