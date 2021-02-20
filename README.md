@@ -15,8 +15,6 @@ Pkg.add(PackageSpec(url="https://github.com/senresearch/MatrixLM.jl", rev="maste
 Pkg.add(PackageSpec(url="https://github.com/senresearch/GeneticScreens.jl", rev="master"))
 ```
 
-`GeneticScreens` was developed in [Julia v1.5.3](https://julialang.org/downloads/). 
-
 ## Usage
 
 ```
